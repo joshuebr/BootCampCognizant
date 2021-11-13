@@ -5,20 +5,21 @@ import pandas as pd
 
 
 #comandos df.head(4), df.tail(4), df.shape, df.describe, df.columns, df.dtypes, df.loc
+
+# LOCALIZANDO DIRETORIO E DELETANDO ARQUIVO SE EXISTIR.
+
 path = r"C:\Projeto Análise de dados"
 diretorio = os.listdir(path)
 for file in diretorio:
     if file == "Novo.csv":
         os.remove(file)
 
+# CRIANDO O DATAFRAME DOM PANDAS
 
 df = pd.read_csv(f"{path}/CAD_IES.csv", encoding= 'ISO-8859-1', sep=";", error_bad_lines=False, skiprows=10)
 
-lista = []  
+#FUNÇÃO DA ESCOLHA DA REGIÃO  
 
-#n = str()
-
-    
 
 
 def Escolha(msg):
@@ -54,6 +55,7 @@ def Escolha(msg):
     return n
 
 
+# FUNÇÃO DA ESOLHA DA CIDADE DA REGIÀO
 
 def Regiao(cidade):
     while True:
@@ -72,6 +74,9 @@ def Regiao(cidade):
     downtown = []
     mnp.clear()
     city.clear()
+
+    #SELECIONANDO OS DADOS DA CIDADE DA REGIÃO EM UMA LISTA
+
     mnp.append(df.loc[df['MUNICIPIOIES'] == str(cid)])
     
     for k, v in enumerate(mnp):
@@ -92,11 +97,20 @@ def Regiao(cidade):
                 k +=1    
                 city[f'EMAIL {str(k)}'] = str(h).upper()
             k = 0 
-            downtown.append(city.copy())    
+        
+        #SALVANDO AS INFORMÇÕES DA CIDADE EM UM DICIONÁRIO
+
+            downtown.append(city.copy())  
+        
+        # EXCESSÃO DE ERRO, SE NAO HOUVER A CIDADE INFORMADA NA ENTRADA PELO USUÁRIO.  
+        
         except:
             print('\nESTA CIDADE/MUNICÍPIO NÃO PERTENCE A ESTA REGIÃO!')
             break 
     print() 
+
+    #'PRINTANDO' O CABEÇALHO 
+
     print(f'{"instituição:":>15}{"endereço:":>40}{"contato:":>20}{"e-mail:":>20}\n'.title())
     try: 
         for i, e in enumerate(city):
@@ -106,10 +120,17 @@ def Regiao(cidade):
             print(" --", city[f'CONTATO {str(i)}'], end='')
             print(" --", city[f'EMAIL {str(i)}'], end='')
             print('\n')
+
+    #EXCESSÃO DE ERRO, DE ENTRADA DO PROGRAMA.  
     except KeyError:
         pass   
 
-    NovoDF = pd.DataFrame(downtown)               
+    # CRIANDO NOVO DATAFRAME
+
+    NovoDF = pd.DataFrame(downtown)     
+
+    #CRIANDO NOVO ARQUIVO ".CSV" 
+             
     NovoDF.to_csv(f'{path}/Novo.csv', index=False)
 
 
